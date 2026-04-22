@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Panel</title>
+<style>
+body{
+background:white;
+font-family:sans-serif;
+text-align:center;
+}
+input{
+padding:10px;
+margin:5px;
+width:200px;
+}
+button{
+padding:10px;
+margin:5px;
+}
+</style>
+</head>
+<body>
+
+<h2>PANEL</h2>
+
+<input type="text" id="number" placeholder="628xxx">
+
+<br>
+
+<button onclick="search()">SEARCH NUMBER</button>
+<button onclick="add()">ADD DB</button>
+<button onclick="del()">DEL DB</button>
+<button onclick="ban()">BANNED</button>
+
+<script>
+
+function getNum(){
+return document.getElementById("number").value
+}
+
+async function search(){
+let res = await fetch("/api/search?num="+getNum())
+alert(await res.text())
+}
+
+async function add(){
+await fetch("/api/add",{method:"POST",body:getNum()})
+alert("added")
+}
+
+async function del(){
+await fetch("/api/delete",{method:"POST",body:getNum()})
+alert("deleted")
+}
+
+async function ban(){
+await fetch("/api/banned",{method:"POST",body:getNum()})
+alert("banned")
+}
+
+</script>
+
+</body>
+</html>
