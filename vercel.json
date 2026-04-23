@@ -1,8 +1,7 @@
-
 {
   "routes": [
-    { "src": "/", "dest": "/public/index.html" },
-    { "src": "/panel", "dest": "/public/panel.html" },
-    { "src": "/api/(.*)", "dest": "/api/$1" }
+    { "src": "^/$", "dest": "/public/index.html" },
+    { "src": "^/panel$", "dest": "/public/panel.html" },
+    { "src": "^/api/(.*)", "dest": "/api/$1" }
   ]
 }
