@@ -1,48 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Login</title>
+<title>Verify</title>
 <style>
 body{
-background:white;
+background:#fff;
 font-family:sans-serif;
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
+margin:0;
 }
-.box{
+
+.card{
+width:350px;
+padding:30px;
+border-radius:20px;
+box-shadow:0 0 20px rgba(0,0,0,0.1);
 text-align:center;
 }
-input{
-padding:10px;
-width:200px;
+
+h2{
+margin-bottom:20px;
 }
+
+input{
+width:100%;
+padding:15px;
+border-radius:10px;
+border:1px solid #ccc;
+margin-bottom:15px;
+font-size:16px;
+}
+
 button{
-padding:10px;
-margin-top:10px;
+width:100%;
+padding:15px;
+border:none;
+border-radius:10px;
+background:#007bff;
+color:white;
+font-size:16px;
+cursor:pointer;
 }
 </style>
 </head>
-<body>
 
-<div class="box">
-<h3>LOGIN</h3>
-<input type="password" id="pw">
-<br>
-<button onclick="login()">ENTER</button>
+<body>
+<div class="card">
+<h2>Verification</h2>
+<input type="password" id="pw" placeholder="Enter Password">
+<button onclick="login()">Continue</button>
 </div>
 
 <script>
 function login(){
 let pw = document.getElementById("pw").value
-if(pw === "NixxIsHere"){
+if(pw === "=*1*lak*&!+1"){
 location.href="/panel"
 }else{
-alert("Password salah")
+alert("Wrong Password")
 }
 }
 </script>
-
 </body>
 </html>
