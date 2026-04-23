@@ -1,65 +1,102 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<title>Verify</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Verification</title>
 
 <style>
-body{
-background:#fff;
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:sans-serif;
+}
+
+body{
+background:#f8f9fa;
 display:flex;
 justify-content:center;
 align-items:center;
 height:100vh;
-margin:0;
 }
 
+/* CARD */
 .card{
 width:90%;
-max-width:350px;
-padding:30px;
+max-width:320px;
+background:white;
+padding:25px;
 border-radius:20px;
-box-shadow:0 0 20px rgba(0,0,0,0.1);
+box-shadow:0 5px 20px rgba(0,0,0,0.1);
 text-align:center;
 }
 
+/* TITLE */
+.card h2{
+margin-bottom:20px;
+}
+
+/* INPUT */
 input{
 width:100%;
-padding:15px;
+max-width:260px;
+padding:12px;
 border-radius:10px;
 border:1px solid #ccc;
 margin-bottom:15px;
+font-size:14px;
 }
 
+/* BUTTON */
 button{
 width:100%;
-padding:15px;
+max-width:260px;
+padding:12px;
 border:none;
 border-radius:10px;
 background:#007bff;
 color:white;
+font-size:14px;
+cursor:pointer;
+transition:0.2s;
+}
+
+button:hover{
+background:#0056b3;
+}
+
+/* RESPONSIVE */
+@media(max-width:400px){
+.card{
+padding:20px;
+}
 }
 </style>
 </head>
 
 <body>
+
 <div class="card">
 <h2>Verification</h2>
+
 <input type="password" id="pw" placeholder="Enter Password">
+
 <button onclick="login()">Continue</button>
 </div>
 
 <script>
 function login(){
-let pw = document.getElementById("pw").value
+const pw = document.getElementById("pw").value
+
 if(pw === "Nixx#123"){
 localStorage.setItem("login","true")
-location.href="/panel"
+window.location.href = "/panel"
 }else{
-alert("Wrong Password")
+alert("Password salah")
 }
 }
 </script>
+
 </body>
 </html>
