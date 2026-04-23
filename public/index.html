@@ -2,6 +2,8 @@
 <html>
 <head>
 <title>Verify</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <style>
 body{
 background:#fff;
@@ -14,15 +16,12 @@ margin:0;
 }
 
 .card{
-width:350px;
+width:90%;
+max-width:350px;
 padding:30px;
 border-radius:20px;
 box-shadow:0 0 20px rgba(0,0,0,0.1);
 text-align:center;
-}
-
-h2{
-margin-bottom:20px;
 }
 
 input{
@@ -31,7 +30,6 @@ padding:15px;
 border-radius:10px;
 border:1px solid #ccc;
 margin-bottom:15px;
-font-size:16px;
 }
 
 button{
@@ -41,8 +39,6 @@ border:none;
 border-radius:10px;
 background:#007bff;
 color:white;
-font-size:16px;
-cursor:pointer;
 }
 </style>
 </head>
@@ -58,131 +54,12 @@ cursor:pointer;
 function login(){
 let pw = document.getElementById("pw").value
 if(pw === "Nixx#123"){
+localStorage.setItem("login","true")
 location.href="/panel"
 }else{
 alert("Wrong Password")
 }
 }
 </script>
-</body>
-</html>}
-
-.item{
-display:flex;
-justify-content:space-between;
-padding:15px;
-border-radius:20px;
-margin-bottom:10px;
-background:#f9f9f9;
-}
-
-.badge{
-padding:5px 15px;
-border-radius:20px;
-color:white;
-}
-
-.green{background:green;}
-.red{background:red;}
-</style>
-</head>
-
-<body>
-
-<div class="topbar">
-<h3>Panel</h3>
-
-<div class="menu" onclick="toggleMenu()">
-☰
-<div class="dropdown" id="dropdown">
-<div onclick="setMode('add')">add db</div>
-<div onclick="setMode('del')">del db</div>
-<div onclick="setMode('ban')">add banned</div>
-<div onclick="setMode('unban')">del banned</div>
-<div onclick="setMode('search')">search</div>
-</div>
-</div>
-</div>
-
-<div class="input-box">
-<input id="number" placeholder="628xxx">
-<br>
-<button onclick="action()" id="btn">Search</button>
-</div>
-
-<div class="list" id="list"></div>
-
-<script>
-let mode = "search"
-
-function toggleMenu(){
-let d = document.getElementById("dropdown")
-d.style.display = d.style.display === "block" ? "none" : "block"
-}
-
-function setMode(m){
-mode = m
-document.getElementById("btn").innerText = m.toUpperCase()
-}
-
-function getNum(){
-return document.getElementById("number").value
-}
-
-async function action(){
-let num = getNum()
-
-if(mode === "search"){
-let res = await fetch("/api/search?num="+num)
-alert(await res.text())
-}
-
-if(mode === "add"){
-await fetch("/api/add",{method:"POST",body:num})
-}
-
-if(mode === "del"){
-await fetch("/api/delete",{method:"POST",body:num})
-}
-
-if(mode === "ban"){
-await fetch("/api/banned",{method:"POST",body:num})
-}
-
-if(mode === "unban"){
-await fetch("/api/unban",{method:"POST",body:num})
-}
-
-loadList()
-}
-
-async function loadList(){
-let res = await fetch("/api/all")
-let data = await res.json()
-
-let html = ""
-
-data.allowed.forEach(n=>{
-html += `
-<div class="item">
-${n}
-<span class="badge green">DB</span>
-</div>`
-})
-
-data.banned.forEach(n=>{
-html += `
-<div class="item">
-${n}
-<span class="badge red">BANNED</span>
-</div>`
-})
-
-document.getElementById("list").innerHTML = html
-}
-
-loadList()
-</script>
-
 </body>
 </html>
