@@ -1,68 +1,192 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Verify</title>
+<title>Panel</title>
 <style>
 body{
 background:#fff;
 font-family:sans-serif;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
 margin:0;
+padding:20px;
 }
 
-.card{
-width:350px;
-padding:30px;
-border-radius:20px;
-box-shadow:0 0 20px rgba(0,0,0,0.1);
+/* HEADER */
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.menu{
+cursor:pointer;
+position:relative;
+}
+
+.dropdown{
+display:none;
+position:absolute;
+right:0;
+top:30px;
+background:white;
+border:1px solid #ddd;
+border-radius:10px;
+overflow:hidden;
+}
+
+.dropdown div{
+padding:10px 20px;
+cursor:pointer;
+}
+
+.dropdown div:hover{
+background:#f1f1f1;
+}
+
+/* INPUT */
+.input-box{
+margin-top:30px;
 text-align:center;
 }
 
-h2{
-margin-bottom:20px;
-}
-
 input{
-width:100%;
+width:300px;
 padding:15px;
 border-radius:10px;
 border:1px solid #ccc;
-margin-bottom:15px;
 font-size:16px;
 }
 
 button{
-width:100%;
-padding:15px;
-border:none;
-border-radius:10px;
+margin-top:10px;
+padding:15px 30px;
 background:#007bff;
+border:none;
 color:white;
-font-size:16px;
+border-radius:10px;
 cursor:pointer;
 }
+
+/* LIST */
+.list{
+margin-top:30px;
+}
+
+.item{
+display:flex;
+justify-content:space-between;
+padding:15px;
+border-radius:20px;
+margin-bottom:10px;
+background:#f9f9f9;
+}
+
+.badge{
+padding:5px 15px;
+border-radius:20px;
+color:white;
+}
+
+.green{background:green;}
+.red{background:red;}
 </style>
 </head>
 
 <body>
-<div class="card">
-<h2>Verification</h2>
-<input type="password" id="pw" placeholder="Enter Password">
-<button onclick="login()">Continue</button>
+
+<div class="topbar">
+<h3>Panel</h3>
+
+<div class="menu" onclick="toggleMenu()">
+☰
+<div class="dropdown" id="dropdown">
+<div onclick="setMode('add')">add db</div>
+<div onclick="setMode('del')">del db</div>
+<div onclick="setMode('ban')">add banned</div>
+<div onclick="setMode('unban')">del banned</div>
+<div onclick="setMode('search')">search</div>
+</div>
+</div>
 </div>
 
+<div class="input-box">
+<input id="number" placeholder="628xxx">
+<br>
+<button onclick="action()" id="btn">Search</button>
+</div>
+
+<div class="list" id="list"></div>
+
 <script>
-function login(){
-let pw = document.getElementById("pw").value
-if(pw === "=*1*lak*&!+1"){
-location.href="/panel"
-}else{
-alert("Wrong Password")
+let mode = "search"
+
+function toggleMenu(){
+let d = document.getElementById("dropdown")
+d.style.display = d.style.display === "block" ? "none" : "block"
 }
+
+function setMode(m){
+mode = m
+document.getElementById("btn").innerText = m.toUpperCase()
 }
+
+function getNum(){
+return document.getElementById("number").value
+}
+
+async function action(){
+let num = getNum()
+
+if(mode === "search"){
+let res = await fetch("/api/search?num="+num)
+alert(await res.text())
+}
+
+if(mode === "add"){
+await fetch("/api/add",{method:"POST",body:num})
+}
+
+if(mode === "del"){
+await fetch("/api/delete",{method:"POST",body:num})
+}
+
+if(mode === "ban"){
+await fetch("/api/banned",{method:"POST",body:num})
+}
+
+if(mode === "unban"){
+await fetch("/api/unban",{method:"POST",body:num})
+}
+
+loadList()
+}
+
+async function loadList(){
+let res = await fetch("/api/all")
+let data = await res.json()
+
+let html = ""
+
+data.allowed.forEach(n=>{
+html += `
+<div class="item">
+${n}
+<span class="badge green">DB</span>
+</div>`
+})
+
+data.banned.forEach(n=>{
+html += `
+<div class="item">
+${n}
+<span class="badge red">BANNED</span>
+</div>`
+})
+
+document.getElementById("list").innerHTML = html
+}
+
+loadList()
 </script>
+
 </body>
 </html>
