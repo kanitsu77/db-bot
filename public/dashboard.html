@@ -372,7 +372,7 @@ async function loadDatabase(){
 try{
 
 let res=await fetch(
-`https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`,
+`https://raw.githubusercontent.com/kanitsu77/db-bot/main/database/nomor.json`,
 {
 headers:{
 Authorization:`Bearer ${GITHUB_TOKEN}`
