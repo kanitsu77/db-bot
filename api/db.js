@@ -5,7 +5,7 @@ const owner="kanitsu77"
 const repo="db-bot"
 const path="database/nomor.json"
 
-const api=`https://api.github.com/repos/${owner}/${repo}/contents/${path}`
+const api="https://api.github.com/repos/kanitsu77/db-bot/contents/database/nomor.json"
 
 if(req.method==="GET"){
 
