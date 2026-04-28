@@ -1,9 +1,9 @@
-export default async function handler(req,res){
+module.exports = async (req,res)=>{
 
 const nomor=req.query.nomor
 
 if(!nomor){
-return res.json({
+return res.status(200).json({
 status:false,
 msg:"nomor kosong"
 })
@@ -30,7 +30,8 @@ file.content,
 )
 
 const found=data.find(
-v=>v.number===nomor && v.status==="active"
+v=>v.number===nomor &&
+v.status==="active"
 )
 
 if(found){
