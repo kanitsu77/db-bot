@@ -1,11 +1,9 @@
-export default async function handler(req,res){
+module.exports = async (req,res)=>{
 
 const token=process.env.GITHUB_TOKEN
-const owner="kanitsu77"
-const repo="db-bot"
-const path="database/nomor.json"
 
-const api="https://api.github.com/repos/kanitsu77/db-bot/contents/database/nomor.json"
+const api=
+"https://api.github.com/repos/kanitsu77/db-bot/contents/database/nomor.json"
 
 if(req.method==="GET"){
 
@@ -24,18 +22,13 @@ file.content,
 ).toString()
 )
 
-return res.status(200).json({
-data,
-sha:file.sha
-})
+return res.json(data)
 
 }
 
-
 if(req.method==="POST"){
 
-const body=req.body
-const action=body.action
+let body=req.body
 
 const get=await fetch(api,{
 headers:{
@@ -52,7 +45,7 @@ file.content,
 ).toString()
 )
 
-if(action==="add"){
+if(body.action==="add"){
 data.push({
 id:Date.now(),
 number:body.number,
@@ -60,25 +53,25 @@ status:"active"
 })
 }
 
-if(action==="ban"){
+if(body.action==="delete"){
+data=data.filter(
+v=>v.number!=body.number
+)
+}
+
+if(body.action==="ban"){
 data=data.map(v=>
 v.number==body.number
 ? {...v,status:"banned"}
-: v
+:v
 )
 }
 
-if(action==="unban"){
+if(body.action==="unban"){
 data=data.map(v=>
 v.number==body.number
 ? {...v,status:"active"}
-: v
-)
-}
-
-if(action==="delete"){
-data=data.filter(
-v=>v.number!=body.number
+:v
 )
 }
 
@@ -94,7 +87,7 @@ Authorization:`Bearer ${token}`,
 "Content-Type":"application/json"
 },
 body:JSON.stringify({
-message:"update db panel",
+message:"update db",
 content,
 sha:file.sha
 })
@@ -106,4 +99,4 @@ success:true
 
 }
 
-  }
+              }
