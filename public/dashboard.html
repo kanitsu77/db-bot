@@ -1,67 +1,249 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
-<title>NEXO DB</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>NEXO DB Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
 <style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
 body{
-background:#0f172a;
-color:#fff;
-font-family:sans-serif;
-padding:30px
+min-height:100vh;
+background:linear-gradient(135deg,#020617,#0f172a,#111827);
+color:white;
+overflow-x:hidden;
 }
-button{
-padding:10px 16px;
-margin:4px;
-border:0;
-border-radius:10px;
-cursor:pointer
+
+body:before{
+content:"";
+position:fixed;
+width:420px;
+height:420px;
+border-radius:50%;
+background:#2563eb;
+filter:blur(150px);
+top:-120px;
+left:-100px;
+opacity:.35;
+z-index:-1;
 }
-input{
-padding:12px;
-border-radius:10px;
-border:0
+
+body:after{
+content:"";
+position:fixed;
+width:420px;
+height:420px;
+border-radius:50%;
+background:#7c3aed;
+filter:blur(150px);
+bottom:-120px;
+right:-100px;
+opacity:.35;
+z-index:-1;
 }
+
+.wrap{
+padding:30px;
+max-width:1400px;
+margin:auto;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+flex-wrap:wrap;
+gap:20px;
+margin-bottom:30px;
+}
+
+.brand h1{
+font-size:48px;
+font-weight:700;
+background:linear-gradient(90deg,#60a5fa,#a78bfa);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.brand p{
+color:#94a3b8;
+margin-top:8px;
+}
+
+.searchBox{
+display:flex;
+gap:12px;
+flex-wrap:wrap;
+}
+
+.searchBox input{
+width:320px;
+padding:15px 18px;
+background:rgba(255,255,255,.08);
+border:1px solid rgba(255,255,255,.08);
+color:white;
+border-radius:18px;
+outline:none;
+}
+
+.btn{
+border:none;
+padding:14px 20px;
+border-radius:16px;
+background:linear-gradient(90deg,#3b82f6,#8b5cf6);
+color:white;
+font-weight:600;
+cursor:pointer;
+transition:.2s;
+}
+
+.btn:hover{
+transform:translateY(-2px);
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+margin-bottom:30px;
+}
+
 .card{
-background:#1e293b;
-padding:20px;
-border-radius:20px;
-margin-bottom:20px
+background:rgba(255,255,255,.07);
+border:1px solid rgba(255,255,255,.07);
+backdrop-filter:blur(16px);
+padding:28px;
+border-radius:28px;
+box-shadow:0 8px 30px rgba(0,0,0,.25);
 }
+
+.card small{
+color:#94a3b8;
+}
+
+.card h2{
+font-size:46px;
+margin-top:10px;
+}
+
+.panel{
+background:rgba(255,255,255,.07);
+border:1px solid rgba(255,255,255,.07);
+backdrop-filter:blur(16px);
+padding:28px;
+border-radius:30px;
+box-shadow:0 8px 30px rgba(0,0,0,.25);
+overflow:auto;
+}
+
 table{
 width:100%;
-border-collapse:collapse
+min-width:800px;
+border-collapse:collapse;
 }
-td,th{
-padding:14px;
-border-bottom:1px solid #334155
+
+th{
+padding:18px;
+text-align:left;
+color:#94a3b8;
+font-size:14px;
+}
+
+td{
+padding:18px;
+border-top:1px solid rgba(255,255,255,.06);
+}
+
+.badge{
+padding:8px 14px;
+border-radius:30px;
+font-size:12px;
+font-weight:700;
+}
+
+.active{
+background:rgba(34,197,94,.18);
+color:#4ade80;
+}
+
+.banned{
+background:rgba(239,68,68,.18);
+color:#f87171;
+}
+
+.act{
+border:none;
+padding:10px 14px;
+border-radius:12px;
+margin:4px;
+font-weight:600;
+color:white;
+cursor:pointer;
+}
+
+.ban{background:#ef4444}
+.unban{background:#22c55e}
+.del{background:#f59e0b}
+.check{background:#3b82f6}
+
+.footer{
+margin-top:20px;
+color:#64748b;
+font-size:14px;
+}
+
+@media(max-width:768px){
+.brand h1{
+font-size:34px;
+}
+.searchBox input{
+width:100%;
+}
 }
 </style>
 </head>
 <body>
 
-<h1>NEXO DATABASE</h1>
+<div class="wrap">
 
+<div class="topbar">
+<div class="brand">
+<h1>NEXO DB</h1>
+<p>Live GitHub Number Database Panel</p>
+</div>
+
+<div class="searchBox">
+<input id="search" placeholder="Cari nomor..." onkeyup="searchNum(this.value)">
+<button class="btn" onclick="addNum()">+ Add Number</button>
+<button class="btn" onclick="loadDb()">Refresh</button>
+</div>
+</div>
+
+<div class="cards">
 <div class="card">
-<input id="search" placeholder="Search number"
-onkeyup="search(this.value)">
-<button onclick="addNum()">
-+1 Add
-</button>
-<button onclick="loadDb()">
-Refresh
-</button>
+<small>Total Number</small>
+<h2 id="total">0</h2>
 </div>
 
 <div class="card">
-Total:
-<span id="total">0</span>
-|
-Banned:
-<span id="ban">0</span>
+<small>Active</small>
+<h2 id="active">0</h2>
 </div>
 
 <div class="card">
+<small>Banned</small>
+<h2 id="banned">0</h2>
+</div>
+</div>
+
+<div class="panel">
 <table>
 <thead>
 <tr>
@@ -71,10 +253,14 @@ Banned:
 <th>Action</th>
 </tr>
 </thead>
-
 <tbody id="rows"></tbody>
-
 </table>
+</div>
+
+<div class="footer">
+NEXO Database Control Panel
+</div>
+
 </div>
 
 <script>
@@ -83,125 +269,96 @@ let data=[]
 let filtered=[]
 
 async function loadDb(){
+try{
+const r=await fetch('/api/db')
+const j=await r.json()
 
-let r=await fetch("/api/db")
-let j=await r.json()
+if(Array.isArray(j)){
+data=j
+}else{
+data=j.data||[]
+}
 
-data=j.data
 filtered=[...data]
-
 render()
-
+}catch(e){
+alert('API gagal dibaca')
+console.log(e)
+}
 }
 
 function render(){
-
-rows.innerHTML=""
+const rows=document.getElementById('rows')
+rows.innerHTML=''
 
 filtered.forEach((u,i)=>{
-
 rows.innerHTML+=`
 <tr>
 <td>${i+1}</td>
 <td>${u.number}</td>
-<td>${u.status}</td>
 <td>
-
-<button onclick="banNum('${u.number}')">
-Ban
-</button>
-
-<button onclick="unbanNum('${u.number}')">
-Unban
-</button>
-
-<button onclick="delNum('${u.number}')">
-Delete
-</button>
-
-<button onclick="cekNum('${u.number}')">
-Cek
-</button>
-
+<span class="badge ${u.status}">
+${u.status}
+</span>
+</td>
+<td>
+${u.status==='active'
+?`<button class='act ban' onclick="actionDB('ban','${u.number}')">Ban</button>`
+:`<button class='act unban' onclick="actionDB('unban','${u.number}')">Unban</button>`
+}
+<button class='act del' onclick="delNum('${u.number}')">Delete</button>
+<button class='act check' onclick="cekNum('${u.number}')">Cek</button>
 </td>
 </tr>
 `
-
 })
 
-total.innerText=data.length
-ban.innerText=
-data.filter(
-v=>v.status=="banned"
-).length
+document.getElementById('total').innerText=data.length
+document.getElementById('active').innerText=
+data.filter(v=>v.status==='active').length
 
+document.getElementById('banned').innerText=
+data.filter(v=>v.status==='banned').length
 }
 
-async function post(action,number){
-
-await fetch("/api/db",{
-method:"POST",
+async function actionDB(action,number){
+await fetch('/api/db',{
+method:'POST',
 headers:{
-"Content-Type":"application/json"
+'Content-Type':'application/json'
 },
 body:JSON.stringify({
 action,
 number
 })
 })
-
 loadDb()
-
 }
 
 function addNum(){
-
-let n=prompt("nomor?")
-if(!n) return
-
-post("add",n)
-
-}
-
-function banNum(n){
-post("ban",n)
-}
-
-function unbanNum(n){
-post("unban",n)
+let num=prompt('Masukkan nomor')
+if(!num) return
+actionDB('add',num)
 }
 
 function delNum(n){
-if(confirm("hapus?")){
-post("delete",n)
+if(confirm('Hapus nomor?')){
+actionDB('delete',n)
 }
+}
+
+function searchNum(q){
+q=q.toLowerCase()
+filtered=data.filter(v=>
+v.number.includes(q)
+)
+render()
 }
 
 async function cekNum(n){
-
-let r=await fetch(
-"/api/ceknomor?nomor="+n
-)
-
+let r=await fetch('/api/ceknomor?nomor='+n)
 let j=await r.json()
-
-alert(
-JSON.stringify(
-j,null,2
-)
-)
-
-}
-
-function search(q){
-
-filtered=
-data.filter(
-v=>v.number.includes(q)
-)
-
-render()
-
+alert(JSON.stringify(j,null,2))
 }
 
 loadDb()
@@ -209,4 +366,4 @@ loadDb()
 </script>
 
 </body>
-</html>
+  </html>
