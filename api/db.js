@@ -1,102 +1,56 @@
 module.exports = async (req,res)=>{
 
+try{
+
 const token=process.env.GITHUB_TOKEN
 
-const api=
-"https://api.github.com/repos/kanitsu77/db-bot/contents/database/nomor.json"
-
-if(req.method==="GET"){
-
-const r=await fetch(api,{
-headers:{
-Authorization:`Bearer ${token}`
-}
-})
-
-const file=await r.json()
-
-const data=JSON.parse(
-Buffer.from(
-file.content,
-"base64"
-).toString()
-)
-
-return res.json(data)
-
-}
-
-if(req.method==="POST"){
-
-let body=req.body
-
-const get=await fetch(api,{
-headers:{
-Authorization:`Bearer ${token}`
-}
-})
-
-const file=await get.json()
-
-let data=JSON.parse(
-Buffer.from(
-file.content,
-"base64"
-).toString()
-)
-
-if(body.action==="add"){
-data.push({
-id:Date.now(),
-number:body.number,
-status:"active"
+if(!token){
+return res.status(500).json({
+error:"ENV token tidak ada"
 })
 }
 
-if(body.action==="delete"){
-data=data.filter(
-v=>v.number!=body.number
-)
-}
-
-if(body.action==="ban"){
-data=data.map(v=>
-v.number==body.number
-? {...v,status:"banned"}
-:v
-)
-}
-
-if(body.action==="unban"){
-data=data.map(v=>
-v.number==body.number
-? {...v,status:"active"}
-:v
-)
-}
-
-const content=
-Buffer.from(
-JSON.stringify(data,null,2)
-).toString("base64")
-
-await fetch(api,{
-method:"PUT",
+const response=await fetch(
+"https://api.github.com/repos/kanitsu77/db-bot/contents/database/nomor.json",
+{
 headers:{
 Authorization:`Bearer ${token}`,
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-message:"update db",
-content,
-sha:file.sha
-})
-})
+Accept:"application/vnd.github+json"
+}
+}
+)
 
-return res.json({
-success:true
+const file=await response.json()
+
+if(file.message){
+return res.status(500).json(file)
+}
+
+if(!file.content){
+return res.status(500).json({
+error:"content kosong",
+raw:file
+})
+}
+
+const decoded=
+Buffer
+.from(
+file.content,
+"base64"
+)
+.toString()
+
+const data=JSON.parse(decoded)
+
+return res.status(200).json(data)
+
+}catch(err){
+
+return res.status(500).json({
+error:String(err)
 })
 
 }
 
-              }
+}
